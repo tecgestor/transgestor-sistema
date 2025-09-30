@@ -411,7 +411,7 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   z-index: 1001;
   width: 90%;
-  max-width: 500px;
+  max-width: 800px; /* Aumentado para modal de viagem */
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -438,6 +438,78 @@ body {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 30px;
+}
+
+/* === ESTILOS ESPECÍFICOS PARA MODAL DE VIAGEM === */
+.viagem-form {
+  max-width: 100%;
+}
+
+.form-section {
+  background: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.form-section h4 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-size: 1.1rem;
+  border-bottom: 2px solid var(--primary-color);
+  padding-bottom: 5px;
+}
+
+.form-section h5 {
+  color: var(--secondary-color);
+  margin-bottom: 10px;
+  margin-top: 15px;
+  font-size: 1rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 15px;
+}
+
+.abastecimento-group {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: var(--border-radius);
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.saldo-section {
+  background: #e7f3ff;
+  border-color: var(--primary-color);
+  text-align: center;
+}
+
+.saldo-display {
+  margin: 10px 0;
+}
+
+.saldo-valor {
+  font-size: 2rem;
+  font-weight: bold;
+}
+
+.saldo-valor.positivo {
+  color: var(--success-color);
+}
+
+.saldo-valor.negativo {
+  color: var(--error-color);
+}
+
+.frete-total {
+  background-color: #e9ecef !important;
+  font-weight: bold;
+  color: var(--success-color);
 }
 
 /* === UTILITY CLASSES === */
@@ -531,6 +603,12 @@ body {
     left: 50%;
     transform: translateX(-50%);
     position: absolute;
+    max-width: none;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
   }
 
   .section-title {
@@ -560,5 +638,13 @@ body {
     width: 100%;
     margin: 0;
     margin-top: 10px;
+  }
+
+  .form-section {
+    padding: 15px;
+  }
+
+  .saldo-valor {
+    font-size: 1.5rem;
   }
 }
