@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TransGestor - Sistema de Gestão</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- TELA DE LOGIN -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-card">
+                <div class="login-header">
+                    <h1 class="login-title">🚛 TransGestor</h1>
+                    <p class="login-subtitle">Sistema de Gestão para Transportadoras</p>
+                </div>
+                <form id="loginForm" class="login-form" onsubmit="doLogin(event)">
+                    <div class="form-group">
+                        <label class="form-label">Email ou Usuário</label>
+                        <input type="text" class="form-control" id="loginUser" value="admin@empresa.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Senha</label>
+                        <input type="password" class="form-control" id="loginPassword" value="123" required>
+                    </div>
+                    <button type="submit" class="btn btn--primary btn--full-width">Entrar</button>
+                    <div id="loginError" class="error-message"></div>
+                </form>
+                <div class="demo-info">
+                    <h4>👥 Usuários de Demonstração:</h4>
+                    <p><strong>Administrador:</strong> admin@empresa.com / 123</p>
+                    <p><strong>Financeiro:</strong> financeiro@empresa.com / 123</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- APLICAÇÃO PRINCIPAL -->
+    <div id="mainApp" class="main-app hidden">
+        <header class="header">
+            <div class="container">
+                <div class="header-content">
+                    <h1 class="logo">🚛 TransGestor</h1>
+                    <div class="header-right">
+                        <span class="user-info">Olá, <span id="currentUserName">Usuário</span></span>
+                        <button class="btn btn--outline btn--sm" onclick="logout()">Sair</button>
+                    </div>
+                    <nav class="nav">
+                        <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+                        <ul class="nav-list" id="navList">
+                            <li><a href="#" onclick="showSection('dashboard', this)" class="nav-link active">Dashboard</a></li>
+                            <li><a href="#" onclick="showSection('veiculos', this)" class="nav-link" id="nav-veiculos">Veículos</a></li>
+                            <li><a href="#" onclick="showSection('motoristas', this)" class="nav-link" id="nav-motoristas">Motoristas</a></li>
+                            <li><a href="#" onclick="showSection('viagens', this)" class="nav-link" id="nav-viagens">Viagens</a></li>
+                            <li><a href="#" onclick="showSection('despesas', this)" class="nav-link" id="nav-despesas">Despesas</a></li>
+                            <li><a href="#" onclick="showSection('pagamentos', this)" class="nav-link" id="nav-pagamentos">Pagamentos</a></li>
+                            <li><a href="#" onclick="showSection('receitas', this)" class="nav-link" id="nav-receitas">Receitas</a></li>
+                            <li><a href="#" onclick="showSection('bancos', this)" class="nav-link" id="nav-bancos">Bancos</a></li>
+                            <li><a href="#" onclick="showSection('usuarios', this)" class="nav-link" id="nav-usuarios">Usuários</a></li>
+                            <li><a href="#" onclick="showSection('perfis', this)" class="nav-link" id="nav-perfis">Perfis</a></li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <main class="main">
+            <!-- DASHBOARD -->
+            <section id="dashboard" class="section active">
+                <div class="container">
+                    <h2 class="section-title">📊 Dashboard</h2>
+
+                    <div class="kpi-grid">
+                        <div class="kpi-card">
+                            <h3>💰 Receita Total</h3>
+                            <p class="kpi-value success" id="receitaTotal">R$ 8.211,84</p>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>💸 Despesas Total</h3>
+                            <p class="kpi-value error" id="despesasTotal">R$ 4.521,52</p>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>📈 Saldo Líquido</h3>
+                            <p class="kpi-value success" id="saldoLiquido">R$ 3.690,32</p>
+                        </div>
+                        <div class="kpi-card">
+                            <h3>📊 Margem Líquida</h3>
+                            <p class="kpi-value info" id="margemTotal">44.9%</p>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <h3>🚛 Últimas Viagens</h3>
+                                <div id="ultimasViagens">
+                                    <div class="viagem-item">
+                                        <strong>28/04/25</strong> - VRS → Brasília<br>
+                                        <small>Motorista: Elias Rodrigues | Veículo: RXP-2674 | Frete: R$ 8.211,84</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h3>⚠️ Despesas Pendentes</h3>
+                                <div id="despesasPendentes">
+                                    <div class="despesa-pendente">
+                                        <strong>Combustível</strong> - R$ 1.500,00<br>
+                                        <small>Venc: 20/10/25</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VEÍCULOS -->
+            <section id="veiculos" class="section">
+                <div class="container">
+                    <h2 class="section-title">🚛 Gestão de Veículos</h2>
+                    <button onclick="openModal('modalVeiculo')" class="btn btn-primary">➕ Novo Veículo</button>
+
+                    <div class="card">
+                        <h3>Lista de Veículos</h3>
+                        <div id="listaVeiculos">
+                            <div class="item-lista">
+                                <strong>RXP-2674</strong> - Volvo FH (2020)<br>
+                                <small>Carreta: ABC-1234 | Eixos: 3 | Status: Ativo</small>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- MOTORISTAS -->
+            <section id="motoristas" class="section">
+                <div class="container">
+                    <h2 class="section-title">👨‍💼 Gestão de Motoristas</h2>
+                    <button onclick="openModal('modalMotorista')" class="btn btn-primary">➕ Novo Motorista</button>
+
+                    <div class="card">
+                        <h3>Lista de Motoristas</h3>
+                        <div id="listaMotoristas">
+                            <div class="item-lista">
+                                <strong>Elias Rodrigues da Silva</strong><br>
+                                <small>CPF: 123.456.789-00 | CNH: 12345678901 | Tel: (14) 99999-9999</small>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- VIAGENS -->
+            <section id="viagens" class="section">
+                <div class="container">
+                    <h2 class="section-title">🛣️ Gestão de Viagens</h2>
+                    <button onclick="openModal('modalViagem')" class="btn btn-primary">➕ Nova Viagem</button>
+
+                    <div class="card">
+                        <h3>Lista de Viagens</h3>
+                        <div id="listaViagens">
+                            <div class="item-lista">
+                                <strong>28/04/25 - VRS → Brasília</strong><br>
+                                <small>Motorista: Elias Rodrigues | Veículo: RXP-2674</small>
+                                <span class="status status-success">Finalizada</span>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DESPESAS -->
+            <section id="despesas" class="section">
+                <div class="container">
+                    <h2 class="section-title">📄 Gestão de Despesas</h2>
+                    <button onclick="openModal('modalDespesa')" class="btn btn-primary">➕ Nova Despesa</button>
+
+                    <div class="card">
+                        <h3>Lista de Despesas</h3>
+                        <div id="listaDespesas">
+                            <div class="item-lista">
+                                <strong>Combustível - NF: 12345</strong> - R$ 1.500,00<br>
+                                <small>Vencimento: 20/10/25 | Veículo: RXP-2674</small>
+                                <span class="status status-warning">Pendente</span>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                    <button class="btn btn-sm btn-success">💳 Baixar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PAGAMENTOS -->
+            <section id="pagamentos" class="section">
+                <div class="container">
+                    <h2 class="section-title">💳 Gestão de Pagamentos</h2>
+
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <h3>💰 Despesas Pendentes</h3>
+                                <div id="despesasPendentesLista">
+                                    <div class="item-lista">
+                                        <strong>Combustível - R$ 1.500,00</strong><br>
+                                        <small>NF: 12345 | Venc: 20/10/25</small>
+                                        <div class="item-actions">
+                                            <button class="btn btn-sm btn-success">💸 Pagar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="card">
+                                <h3>📊 Resumo</h3>
+                                <p><strong>Pendentes:</strong> R$ 2.300,00</p>
+                                <p><strong>Pagas:</strong> R$ 4.521,52</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- RECEITAS -->
+            <section id="receitas" class="section">
+                <div class="container">
+                    <h2 class="section-title">💰 Gestão de Receitas</h2>
+                    <button onclick="openModal('modalReceita')" class="btn btn-primary">➕ Nova Receita</button>
+
+                    <div class="card">
+                        <h3>Lista de Receitas</h3>
+                        <div id="listaReceitas">
+                            <div class="item-lista">
+                                <strong>Frete VRS-Brasília</strong> - R$ 8.211,84<br>
+                                <small>Previsão: 30/09/25</small>
+                                <span class="status status-success">Recebido</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BANCOS -->
+            <section id="bancos" class="section">
+                <div class="container">
+                    <h2 class="section-title">🏦 Contas Bancárias</h2>
+                    <button onclick="openModal('modalBanco')" class="btn btn-primary">➕ Nova Conta</button>
+
+                    <div class="card">
+                        <h3>Contas Cadastradas</h3>
+                        <div id="listaBancos">
+                            <div class="item-lista">
+                                <strong>Banco do Brasil</strong><br>
+                                <small>Ag: 1234 | Conta: 56789-0 | Saldo: R$ 50.000,00</small>
+                                <span class="status status-success">Ativa</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- USUÁRIOS -->
+            <section id="usuarios" class="section">
+                <div class="container">
+                    <h2 class="section-title">👥 Gestão de Usuários</h2>
+                    <button onclick="openModal('modalUsuario')" class="btn btn-primary">➕ Novo Usuário</button>
+
+                    <div class="card">
+                        <h3>Usuários do Sistema</h3>
+                        <div id="listaUsuarios">
+                            <div class="item-lista">
+                                <strong>Administrador</strong> - admin@empresa.com<br>
+                                <small>Perfil: Administrador | Status: Ativo</small>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- PERFIS -->
+            <section id="perfis" class="section">
+                <div class="container">
+                    <h2 class="section-title">🔐 Gestão de Perfis</h2>
+                    <button onclick="openModal('modalPerfil')" class="btn btn-primary">➕ Novo Perfil</button>
+
+                    <div class="card">
+                        <h3>Perfis de Acesso</h3>
+                        <div id="listaPerfis">
+                            <div class="item-lista">
+                                <strong>Administrador</strong><br>
+                                <small>Acesso total ao sistema</small>
+                                <div class="item-actions">
+                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- MODAL OVERLAY -->
+    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeAllModals()"></div>
+
+    <!-- MODAL EXEMPLO (outros modais seriam similares) -->
+    <div id="modalDespesa" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📄 Nova Despesa</h3>
+                <button onclick="closeModal('modalDespesa')" class="btn-close">✕</button>
+            </div>
+            <form onsubmit="return false;">
+                <div class="form-group">
+                    <label>Tipo de Despesa:</label>
+                    <select required>
+                        <option value="">Selecione</option>
+                        <option value="combustivel">Combustível</option>
+                        <option value="manutencao">Manutenção</option>
+                        <option value="pneu">Pneu</option>
+                        <option value="pedagio">Pedágio</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Número da Nota:</label>
+                    <input type="text" required>
+                </div>
+                <div class="form-group">
+                    <label>Valor:</label>
+                    <input type="number" step="0.01" required>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" onclick="closeModal('modalDespesa')" class="btn btn-secondary">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Salvar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
