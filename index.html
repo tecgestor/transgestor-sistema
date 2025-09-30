@@ -97,7 +97,7 @@
                                 <div id="ultimasViagens">
                                     <div class="viagem-item">
                                         <strong>28/04/25</strong> - VRS → Brasília<br>
-                                        <small>Motorista: Elias Rodrigues | Veículo: RXP-2674 | Frete: R$ 8.211,84</small>
+                                        <small>Motorista: Elias Rodrigues | Veículo: RXP-2674 | Frete: R$ 8.211,84 | Saldo: R$ 3.542,25</small>
                                     </div>
                                 </div>
                             </div>
@@ -163,14 +163,14 @@
             <section id="viagens" class="section">
                 <div class="container">
                     <h2 class="section-title">🛣️ Gestão de Viagens</h2>
-                    <button onclick="openModal('modalViagem')" class="btn btn-primary">➕ Nova Viagem</button>
+                    <button onclick="openModal('modalViagem')" class="btn btn-primary">➕ Nova Viagem (Envelope)</button>
 
                     <div class="card">
                         <h3>Lista de Viagens</h3>
                         <div id="listaViagens">
                             <div class="item-lista">
                                 <strong>28/04/25 - VRS → Brasília</strong><br>
-                                <small>Motorista: Elias Rodrigues | Veículo: RXP-2674</small>
+                                <small>Motorista: Elias Rodrigues | Veículo: RXP-2674 | Frete: R$ 8.211,84 | Saldo: R$ 3.542,25</small>
                                 <span class="status status-success">Finalizada</span>
                                 <div class="item-actions">
                                     <button class="btn btn-sm btn-outline">✏️ Editar</button>
@@ -315,43 +315,10 @@
                 </div>
             </section>
         </main>
-    <!-- MODAL OVERLAY -->
-    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeAllModals()"></div>
     </div>
 
-    <!-- MODAL EXEMPLO (outros modais seriam similares) -->
-    <div id="modalDespesa" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📄 Nova Despesa</h3>
-                <button onclick="closeModal('modalDespesa')" class="btn-close">✕</button>
-            </div>
-            <form onsubmit="return false;">
-                <div class="form-group">
-                    <label>Tipo de Despesa:</label>
-                    <select required>
-                        <option value="">Selecione</option>
-                        <option value="combustivel">Combustível</option>
-                        <option value="manutencao">Manutenção</option>
-                        <option value="pneu">Pneu</option>
-                        <option value="pedagio">Pedágio</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Número da Nota:</label>
-                    <input type="text" required>
-                </div>
-                <div class="form-group">
-                    <label>Valor:</label>
-                    <input type="number" step="0.01" required>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" onclick="closeModal('modalDespesa')" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    <!-- MODAL OVERLAY -->
+    <div id="modalOverlay" class="modal-overlay hidden" onclick="closeAllModals()"></div>
 
     <script src="app.js"></script>
 </body>
