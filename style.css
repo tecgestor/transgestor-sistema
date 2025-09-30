@@ -183,6 +183,15 @@ body {
   padding-bottom: 10px;
 }
 
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 30px;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
 /* === CARDS === */
 .card {
   background: var(--white);
@@ -231,6 +240,224 @@ body {
 .kpi-value.error { color: var(--error-color); }
 .kpi-value.info { color: var(--info-color); }
 .kpi-value.warning { color: var(--warning-color); }
+
+/* === SISTEMA DE FILTROS === */
+.filters-container {
+  background: var(--white);
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: var(--box-shadow);
+}
+
+.filters-container h4 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.filters-row {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.filter-input {
+  padding: 10px 12px;
+  border: 2px solid #ddd;
+  border-radius: var(--border-radius);
+  font-size: 0.9rem;
+  min-width: 150px;
+  transition: var(--transition);
+}
+
+.filter-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0,123,255,0.1);
+}
+
+.filter-input::placeholder {
+  color: #999;
+}
+
+/* === GRÁFICOS E CHARTS === */
+.charts-container {
+  margin-top: 40px;
+}
+
+.chart-filters {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  margin-bottom: 30px;
+  box-shadow: var(--box-shadow);
+}
+
+.chart-filters h3 {
+  margin-bottom: 20px;
+  color: var(--primary-color);
+}
+
+.filter-row {
+  display: flex;
+  gap: 20px;
+  align-items: end;
+  flex-wrap: wrap;
+}
+
+.filter-row .form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.filter-row label {
+  font-weight: 500;
+  color: var(--dark-color);
+  font-size: 0.9rem;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 30px;
+}
+
+.chart-card {
+  background: var(--white);
+  border-radius: var(--border-radius);
+  padding: 25px;
+  box-shadow: var(--box-shadow);
+}
+
+.chart-card h4 {
+  margin-bottom: 20px;
+  color: var(--dark-color);
+  text-align: center;
+}
+
+/* === GRÁFICOS SIMPLES === */
+.simple-chart {
+  text-align: center;
+}
+
+.chart-title {
+  font-weight: bold;
+  margin-bottom: 15px;
+  color: var(--dark-color);
+}
+
+.chart-bars {
+  display: flex;
+  justify-content: space-around;
+  align-items: end;
+  height: 200px;
+  border-bottom: 2px solid #ddd;
+  padding-bottom: 10px;
+}
+
+.chart-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.chart-bar {
+  min-height: 20px;
+  min-width: 40px;
+  border-radius: 4px 4px 0 0;
+  display: flex;
+  align-items: end;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  position: relative;
+}
+
+.chart-value {
+  position: absolute;
+  bottom: 5px;
+  font-size: 0.7rem;
+}
+
+.chart-label {
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: var(--dark-color);
+  text-align: center;
+  word-break: break-all;
+  max-width: 60px;
+}
+
+/* === GRÁFICO DE COMPARAÇÃO === */
+.comparison-chart {
+  text-align: left;
+}
+
+.comparison-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.comparison-group {
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  padding: 15px;
+}
+
+.comparison-label {
+  font-weight: bold;
+  margin-bottom: 10px;
+  color: var(--dark-color);
+}
+
+.comparison-bars-container {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.comparison-bar {
+  height: 25px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  color: white;
+  font-size: 0.8rem;
+  font-weight: bold;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+  min-width: 60px;
+}
+
+.comparison-bar.receitas {
+  background: var(--success-color);
+}
+
+.comparison-bar.despesas {
+  background: var(--error-color);
+}
+
+.comparison-result {
+  font-weight: bold;
+  text-align: right;
+  margin-top: 5px;
+}
+
+.comparison-result.positive {
+  color: var(--success-color);
+}
+
+.comparison-result.negative {
+  color: var(--error-color);
+}
 
 /* === GRID SYSTEM === */
 .row {
@@ -310,6 +537,16 @@ body {
   color: var(--white);
 }
 
+.btn-info {
+  background: var(--info-color);
+  color: var(--white);
+}
+
+.btn-warning {
+  background: var(--warning-color);
+  color: var(--dark-color);
+}
+
 .btn-outline {
   background: transparent;
   border: 2px solid var(--primary-color);
@@ -328,6 +565,11 @@ body {
 .btn--sm {
   padding: 8px 16px;
   font-size: 0.9rem;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 0.8rem;
 }
 
 .btn-close {
@@ -359,10 +601,13 @@ body {
   position: absolute;
   top: 15px;
   right: 15px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
 }
 
 .item-actions .btn {
-  margin-left: 5px;
+  margin: 0;
 }
 
 /* === STATUS BADGES === */
@@ -390,6 +635,14 @@ body {
   color: #721c24;
 }
 
+.success {
+  color: var(--success-color);
+}
+
+.error {
+  color: var(--error-color);
+}
+
 /* === MODALS === */
 .modal-overlay {
   position: fixed;
@@ -411,7 +664,7 @@ body {
   box-shadow: 0 10px 30px rgba(0,0,0,0.3);
   z-index: 1001;
   width: 90%;
-  max-width: 800px; /* Aumentado para modal de viagem */
+  max-width: 800px;
   max-height: 90vh;
   overflow-y: auto;
 }
@@ -422,6 +675,10 @@ body {
   align-items: center;
   padding: 20px 25px;
   border-bottom: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  background: var(--white);
+  z-index: 10;
 }
 
 .modal-header h3 {
@@ -438,6 +695,45 @@ body {
   justify-content: flex-end;
   gap: 10px;
   margin-top: 30px;
+  padding-top: 20px;
+  border-top: 1px solid #ddd;
+  position: sticky;
+  bottom: 0;
+  background: var(--white);
+}
+
+/* === MODAIS DE VISUALIZAÇÃO === */
+.view-content {
+  padding: 25px;
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.view-section {
+  margin-bottom: 25px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+  background: var(--light-color);
+}
+
+.view-section h4 {
+  margin-bottom: 15px;
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--primary-color);
+  padding-bottom: 5px;
+}
+
+.view-section p {
+  margin-bottom: 8px;
+}
+
+.abastecimento-view {
+  background: var(--white);
+  padding: 10px;
+  border-radius: 4px;
+  margin-bottom: 8px;
+  border-left: 3px solid var(--info-color);
 }
 
 /* === ESTILOS ESPECÍFICOS PARA MODAL DE VIAGEM === */
@@ -510,6 +806,11 @@ body {
   background-color: #e9ecef !important;
   font-weight: bold;
   color: var(--success-color);
+}
+
+.finalization-section {
+  background: #fff3cd;
+  border-color: var(--warning-color);
 }
 
 /* === UTILITY CLASSES === */
@@ -593,7 +894,7 @@ body {
   .item-actions {
     position: static;
     margin-top: 15px;
-    text-align: right;
+    justify-content: flex-end;
   }
 
   .modal {
@@ -604,6 +905,7 @@ body {
     transform: translateX(-50%);
     position: absolute;
     max-width: none;
+    max-height: calc(100vh - 40px);
   }
 
   .form-row {
@@ -617,6 +919,38 @@ body {
 
   .login-card {
     padding: 30px 20px;
+  }
+
+  .section-header {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .filters-row {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filter-input {
+    min-width: 100%;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filter-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+
+  .chart-bars {
+    flex-wrap: wrap;
+    height: auto;
+    gap: 15px;
+    justify-content: center;
   }
 }
 
@@ -646,5 +980,20 @@ body {
 
   .saldo-valor {
     font-size: 1.5rem;
+  }
+
+  .item-actions {
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .item-actions .btn {
+    font-size: 0.8rem;
+    padding: 4px 8px;
+  }
+
+  .chart-label {
+    max-width: 40px;
+    font-size: 0.7rem;
   }
 }
