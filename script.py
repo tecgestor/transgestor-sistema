@@ -90,7 +90,7 @@ PORT=10000
 NODE_ENV=production
 
 # URLs
-FRONTEND_URL=https://seu-frontend.vercel.app
+FRONTEND_URL=https://transgestor-sistema.vercel.app/
 
 # Banco de dados PostgreSQL
 DATABASE_URL=postgresql://username:password@hostname:port/database
