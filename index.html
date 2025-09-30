@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Carpi Transportes - Sistema de Gestão</title>
+    <title>TransGestor v3.0 - Sistema Completo de Gestão</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,8 +12,8 @@
         <div class="login-container">
             <div class="login-card">
                 <div class="login-header">
-                    <h1 class="login-title">🚛 Carpi Transportes</h1>
-                    <p class="login-subtitle">Sistema de Gestão para Transportadoras</p>
+                    <h1 class="login-title">🚛 TransGestor v3.0</h1>
+                    <p class="login-subtitle">Sistema Completo de Gestão para Transportadoras</p>
                 </div>
                 <form id="loginForm" class="login-form" onsubmit="doLogin(event)">
                     <div class="form-group">
@@ -41,7 +41,7 @@
         <header class="header">
             <div class="container">
                 <div class="header-content">
-                    <h1 class="logo">🚛 Carpi Transportes</h1>
+                    <h1 class="logo">🚛 TransGestor v3.0</h1>
                     <div class="header-right">
                         <span class="user-info">Olá, <span id="currentUserName">Usuário</span></span>
                         <button class="btn btn--outline btn--sm" onclick="logout()">Sair</button>
@@ -69,7 +69,7 @@
             <!-- DASHBOARD -->
             <section id="dashboard" class="section active">
                 <div class="container">
-                    <h2 class="section-title">📊 Dashboard</h2>
+                    <h2 class="section-title">📊 Dashboard Completo</h2>
 
                     <div class="kpi-grid">
                         <div class="kpi-card">
@@ -114,6 +114,8 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Gráficos serão inseridos dinamicamente aqui -->
                 </div>
             </section>
 
@@ -121,18 +123,31 @@
             <section id="veiculos" class="section">
                 <div class="container">
                     <h2 class="section-title">🚛 Gestão de Veículos</h2>
-                    <button onclick="openModal('modalVeiculo')" class="btn btn-primary">➕ Novo Veículo</button>
+
+                    <div class="section-header">
+                        <button onclick="openModal('modalVeiculo')" class="btn btn-primary">➕ Novo Veículo</button>
+
+                        <!-- Filtros -->
+                        <div class="filters-container" id="filtrosVeiculos">
+                            <h4>🔍 Filtros</h4>
+                            <div class="filters-row">
+                                <input type="text" name="placaCaminhao" placeholder="Placa do Caminhão" class="filter-input">
+                                <input type="text" name="modelo" placeholder="Modelo" class="filter-input">
+                                <select name="status" class="filter-input">
+                                    <option value="">Todos os Status</option>
+                                    <option value="ativo">Ativo</option>
+                                    <option value="inativo">Inativo</option>
+                                </select>
+                                <button onclick="applyFilters('veiculos')" class="btn btn-secondary">Filtrar</button>
+                                <button onclick="clearFilters('veiculos')" class="btn btn-outline">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <h3>Lista de Veículos</h3>
                         <div id="listaVeiculos">
-                            <div class="item-lista">
-                                <strong>RXP-2674</strong> - Volvo FH (2020)<br>
-                                <small>Carreta: ABC-1234 | Eixos: 3 | Status: Ativo</small>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -142,18 +157,27 @@
             <section id="motoristas" class="section">
                 <div class="container">
                     <h2 class="section-title">👨‍💼 Gestão de Motoristas</h2>
-                    <button onclick="openModal('modalMotorista')" class="btn btn-primary">➕ Novo Motorista</button>
+
+                    <div class="section-header">
+                        <button onclick="openModal('modalMotorista')" class="btn btn-primary">➕ Novo Motorista</button>
+
+                        <!-- Filtros -->
+                        <div class="filters-container" id="filtrosMotoristas">
+                            <h4>🔍 Filtros</h4>
+                            <div class="filters-row">
+                                <input type="text" name="nome" placeholder="Nome do Motorista" class="filter-input">
+                                <input type="text" name="cpf" placeholder="CPF" class="filter-input">
+                                <input type="text" name="cnh" placeholder="CNH" class="filter-input">
+                                <button onclick="applyFilters('motoristas')" class="btn btn-secondary">Filtrar</button>
+                                <button onclick="clearFilters('motoristas')" class="btn btn-outline">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <h3>Lista de Motoristas</h3>
                         <div id="listaMotoristas">
-                            <div class="item-lista">
-                                <strong>Elias Rodrigues da Silva</strong><br>
-                                <small>CPF: 123.456.789-00 | CNH: 12345678901 | Tel: (14) 99999-9999</small>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -163,19 +187,32 @@
             <section id="viagens" class="section">
                 <div class="container">
                     <h2 class="section-title">🛣️ Gestão de Viagens</h2>
-                    <button onclick="openModal('modalViagem')" class="btn btn-primary">➕ Nova Viagem (Envelope)</button>
+
+                    <div class="section-header">
+                        <button onclick="openModal('modalViagem')" class="btn btn-primary">➕ Nova Viagem (Envelope)</button>
+
+                        <!-- Filtros -->
+                        <div class="filters-container" id="filtrosViagens">
+                            <h4>🔍 Filtros</h4>
+                            <div class="filters-row">
+                                <input type="text" name="motorista" placeholder="Motorista" class="filter-input">
+                                <input type="text" name="veiculo" placeholder="Veículo" class="filter-input">
+                                <input type="date" name="dataViagem" placeholder="Data da Viagem" class="filter-input">
+                                <select name="status" class="filter-input">
+                                    <option value="">Todos os Status</option>
+                                    <option value="andamento">Em Andamento</option>
+                                    <option value="finalizada">Finalizada</option>
+                                </select>
+                                <button onclick="applyFilters('viagens')" class="btn btn-secondary">Filtrar</button>
+                                <button onclick="clearFilters('viagens')" class="btn btn-outline">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <h3>Lista de Viagens</h3>
                         <div id="listaViagens">
-                            <div class="item-lista">
-                                <strong>28/04/25 - VRS → Brasília</strong><br>
-                                <small>Motorista: Elias Rodrigues | Veículo: RXP-2674 | Frete: R$ 8.211,84 | Saldo: R$ 3.542,25</small>
-                                <span class="status status-success">Finalizada</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -185,20 +222,33 @@
             <section id="despesas" class="section">
                 <div class="container">
                     <h2 class="section-title">📄 Gestão de Despesas</h2>
-                    <button onclick="openModal('modalDespesa')" class="btn btn-primary">➕ Nova Despesa</button>
+
+                    <div class="section-header">
+                        <button onclick="openModal('modalDespesa')" class="btn btn-primary">➕ Nova Despesa</button>
+
+                        <!-- Filtros -->
+                        <div class="filters-container" id="filtrosDespesas">
+                            <h4>🔍 Filtros</h4>
+                            <div class="filters-row">
+                                <input type="text" name="tipo" placeholder="Tipo de Despesa" class="filter-input">
+                                <input type="text" name="numeroNota" placeholder="Número da Nota" class="filter-input">
+                                <input type="text" name="veiculo" placeholder="Veículo" class="filter-input">
+                                <input type="date" name="dataVencimento" placeholder="Data Vencimento" class="filter-input">
+                                <select name="status" class="filter-input">
+                                    <option value="">Todos os Status</option>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="pago">Pago</option>
+                                </select>
+                                <button onclick="applyFilters('despesas')" class="btn btn-secondary">Filtrar</button>
+                                <button onclick="clearFilters('despesas')" class="btn btn-outline">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <h3>Lista de Despesas</h3>
                         <div id="listaDespesas">
-                            <div class="item-lista">
-                                <strong>Combustível - NF: 12345</strong> - R$ 1.500,00<br>
-                                <small>Vencimento: 20/10/25 | Veículo: RXP-2674</small>
-                                <span class="status status-warning">Pendente</span>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                    <button class="btn btn-sm btn-success">💳 Baixar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -214,13 +264,7 @@
                             <div class="card">
                                 <h3>💰 Despesas Pendentes</h3>
                                 <div id="despesasPendentesLista">
-                                    <div class="item-lista">
-                                        <strong>Combustível - R$ 1.500,00</strong><br>
-                                        <small>NF: 12345 | Venc: 20/10/25</small>
-                                        <div class="item-actions">
-                                            <button class="btn btn-sm btn-success">💸 Pagar</button>
-                                        </div>
-                                    </div>
+                                    <!-- Dados carregados dinamicamente -->
                                 </div>
                             </div>
                         </div>
@@ -239,16 +283,31 @@
             <section id="receitas" class="section">
                 <div class="container">
                     <h2 class="section-title">💰 Gestão de Receitas</h2>
-                    <button onclick="openModal('modalReceita')" class="btn btn-primary">➕ Nova Receita</button>
+
+                    <div class="section-header">
+                        <button onclick="openModal('modalReceita')" class="btn btn-primary">➕ Nova Receita</button>
+
+                        <!-- Filtros -->
+                        <div class="filters-container" id="filtrosReceitas">
+                            <h4>🔍 Filtros</h4>
+                            <div class="filters-row">
+                                <input type="text" name="descricao" placeholder="Descrição" class="filter-input">
+                                <input type="date" name="dataPrevisao" placeholder="Data Previsão" class="filter-input">
+                                <select name="status" class="filter-input">
+                                    <option value="">Todos os Status</option>
+                                    <option value="pendente">Pendente</option>
+                                    <option value="recebido">Recebido</option>
+                                </select>
+                                <button onclick="applyFilters('receitas')" class="btn btn-secondary">Filtrar</button>
+                                <button onclick="clearFilters('receitas')" class="btn btn-outline">Limpar</button>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="card">
                         <h3>Lista de Receitas</h3>
                         <div id="listaReceitas">
-                            <div class="item-lista">
-                                <strong>Frete VRS-Brasília</strong> - R$ 8.211,84<br>
-                                <small>Previsão: 30/09/25</small>
-                                <span class="status status-success">Recebido</span>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -263,11 +322,7 @@
                     <div class="card">
                         <h3>Contas Cadastradas</h3>
                         <div id="listaBancos">
-                            <div class="item-lista">
-                                <strong>Banco do Brasil</strong><br>
-                                <small>Ag: 1234 | Conta: 56789-0 | Saldo: R$ 50.000,00</small>
-                                <span class="status status-success">Ativa</span>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -282,13 +337,7 @@
                     <div class="card">
                         <h3>Usuários do Sistema</h3>
                         <div id="listaUsuarios">
-                            <div class="item-lista">
-                                <strong>Administrador</strong> - admin@empresa.com<br>
-                                <small>Perfil: Administrador | Status: Ativo</small>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
@@ -303,13 +352,7 @@
                     <div class="card">
                         <h3>Perfis de Acesso</h3>
                         <div id="listaPerfis">
-                            <div class="item-lista">
-                                <strong>Administrador</strong><br>
-                                <small>Acesso total ao sistema</small>
-                                <div class="item-actions">
-                                    <button class="btn btn-sm btn-outline">✏️ Editar</button>
-                                </div>
-                            </div>
+                            <!-- Dados carregados dinamicamente -->
                         </div>
                     </div>
                 </div>
