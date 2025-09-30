@@ -1,7 +1,7 @@
 {
   "name": "transgestor-backend",
   "version": "1.0.0",
-  "description": "Sistema de Gestão para Transportadora - Backend",
+  "description": "Sistema de Gestão para Transportadora - Backend API",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
@@ -11,14 +11,22 @@
     "express": "^4.18.2",
     "cors": "^2.8.5",
     "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.0",
-    "pg": "^8.11.0",
-    "dotenv": "^16.0.3"
+    "jsonwebtoken": "^9.0.2",
+    "dotenv": "^16.3.1"
   },
   "devDependencies": {
-    "nodemon": "^2.0.22"
+    "nodemon": "^3.0.1"
   },
   "engines": {
-    "node": "18.x"
-  }
+    "node": "18.x",
+    "npm": "9.x"
+  },
+  "keywords": [
+    "transportadora",
+    "gestão",
+    "api",
+    "nodejs"
+  ],
+  "author": "TransGestor",
+  "license": "MIT"
 }
