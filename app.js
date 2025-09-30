@@ -13,7 +13,21 @@ let dadosLocais = {
         {id: 1, nome: "Elias Rodrigues da Silva", cpf: "123.456.789-00", cnh: "12345678901", telefone: "(14) 99999-9999", status: "ativo"}
     ],
     viagens: [
-        {id: 1, data: "2025-04-28", motorista: "Elias Rodrigues", veiculo: "RXP-2674", origem: "VRS", destino: "Brasília", status: "finalizada", frete: 8211.84}
+        {
+            id: 1, dataViagem: "2025-04-28", motorista: "Elias Rodrigues da Silva", 
+            veiculo: "RXP-2674", placaCarreta: "ABC-1234", localCarga: "VRS", 
+            localDescarga: "Brasília", kmInicio: 216780, kmFim: 217685, 
+            pesoSaida: 39.80, pesoChegada: 39.80, valorTonelada: 200.00, 
+            freteTotal: 8211.84, status: "finalizada", saldoEnvelope: 3542.25,
+            abastecimentos: [
+                {posto: "FERNAND", km: 216780, litros: 404, valor: 903.20},
+                {posto: "FERNAND", km: "", litros: 250, valor: 556.00}
+            ],
+            arla: {km: 216795, litros: 2.45, valor: 110.25},
+            pedagioRetorno: 7.50,
+            outrasDespesas: 10.00,
+            observacoes: "Conferir 250 litros Diesel - que está na NF até 560 ps AA"
+        }
     ],
     despesas: [
         {id: 1, tipo: "Combustível", numeroNota: "12345", valor: 1500.00, dataVencimento: "2025-10-20", veiculo: "RXP-2674", status: "pendente"}
@@ -94,7 +108,7 @@ function logout() {
     isLoggedIn = false;
 
     localStorage.removeItem('token');
-    localStorage.removeUser('usuario');
+    localStorage.removeItem('usuario');
 
     document.getElementById('loginScreen').classList.remove('hidden');
     document.getElementById('mainApp').classList.add('hidden');
@@ -162,6 +176,11 @@ function openModal(modalId) {
 
         const form = modal.querySelector('form');
         if (form) form.reset();
+
+        // Configurar cálculos automáticos para modal de viagem
+        if (modalId === 'modalViagem') {
+            setupViagemCalculations();
+        }
     }
 }
 
@@ -206,15 +225,208 @@ function createModal(modalId) {
             ]
         },
         modalViagem: {
-            title: '🛣️ Viagem',
-            fields: [
-                {name: 'data', label: 'Data da Viagem', type: 'date', required: true},
-                {name: 'motorista', label: 'Motorista', type: 'text', required: true},
-                {name: 'veiculo', label: 'Veículo', type: 'text', required: true},
-                {name: 'origem', label: 'Origem', type: 'text', required: true},
-                {name: 'destino', label: 'Destino', type: 'text', required: true},
-                {name: 'frete', label: 'Valor do Frete', type: 'number', step: '0.01', required: true}
-            ]
+            title: '🛣️ Nova Viagem (Envelope)',
+            customHTML: `
+                <div class="viagem-form">
+                    <div class="form-section">
+                        <h4>📋 Dados da Viagem</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Data da Viagem:</label>
+                                <input type="date" name="dataViagem" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Motorista:</label>
+                                <select name="motorista" class="form-control" required>
+                                    <option value="">Selecione o motorista</option>
+                                    <option value="Elias Rodrigues da Silva">Elias Rodrigues da Silva</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Placa Caminhão:</label>
+                                <select name="veiculo" class="form-control" required>
+                                    <option value="">Selecione o veículo</option>
+                                    <option value="RXP-2674">RXP-2674</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Placa Carreta:</label>
+                                <input type="text" name="placaCarreta" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>📍 Local de Carga/Descarga</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Local da Carga:</label>
+                                <input type="text" name="localCarga" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Local da Descarga:</label>
+                                <input type="text" name="localDescarga" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>🛣️ Quilometragem</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">KM Início:</label>
+                                <input type="number" name="kmInicio" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">KM Fim:</label>
+                                <input type="number" name="kmFim" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>⚖️ Peso e Frete</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Peso de Saída (ton):</label>
+                                <input type="number" step="0.01" name="pesoSaida" class="form-control" oninput="calcularFrete()" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Peso de Chegada (ton):</label>
+                                <input type="number" step="0.01" name="pesoChegada" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Valor por Tonelada (R$):</label>
+                                <input type="number" step="0.01" name="valorTonelada" class="form-control" oninput="calcularFrete()" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Frete Total (R$):</label>
+                                <input type="number" step="0.01" name="freteTotal" class="form-control frete-total" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>⛽ Abastecimentos</h4>
+                        <div class="abastecimento-group">
+                            <h5>Posto 1:</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Posto:</label>
+                                    <input type="text" name="posto1" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">KM:</label>
+                                    <input type="number" name="kmPosto1" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Litros:</label>
+                                    <input type="number" step="0.01" name="litrosPosto1" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Valor (R$):</label>
+                                    <input type="number" step="0.01" name="valorPosto1" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="abastecimento-group">
+                            <h5>Posto 2:</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Posto:</label>
+                                    <input type="text" name="posto2" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">KM:</label>
+                                    <input type="number" name="kmPosto2" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Litros:</label>
+                                    <input type="number" step="0.01" name="litrosPosto2" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Valor (R$):</label>
+                                    <input type="number" step="0.01" name="valorPosto2" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="abastecimento-group">
+                            <h5>Posto 3:</h5>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label class="form-label">Posto:</label>
+                                    <input type="text" name="posto3" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">KM:</label>
+                                    <input type="number" name="kmPosto3" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Litros:</label>
+                                    <input type="number" step="0.01" name="litrosPosto3" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Valor (R$):</label>
+                                    <input type="number" step="0.01" name="valorPosto3" class="form-control" oninput="calcularSaldo()">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>🔵 ARLA</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">KM ARLA:</label>
+                                <input type="number" name="kmArla" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Litros ARLA:</label>
+                                <input type="number" step="0.01" name="litrosArla" class="form-control" oninput="calcularSaldo()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Valor ARLA (R$):</label>
+                                <input type="number" step="0.01" name="valorArla" class="form-control" oninput="calcularSaldo()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>💰 Outras Despesas</h4>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Pedágio Retorno (R$):</label>
+                                <input type="number" step="0.01" name="pedagioRetorno" class="form-control" oninput="calcularSaldo()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Outras Despesas (R$):</label>
+                                <input type="number" step="0.01" name="outrasDespesas" class="form-control" oninput="calcularSaldo()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section saldo-section">
+                        <h4>💵 Saldo no Envelope</h4>
+                        <div class="saldo-display">
+                            <span class="saldo-valor" id="saldoEnvelope">R$ 0,00</span>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>📝 Observações</h4>
+                        <div class="form-group">
+                            <label class="form-label">Observações:</label>
+                            <textarea name="observacoes" class="form-control" rows="3" placeholder="Adicione observações sobre a viagem..."></textarea>
+                        </div>
+                    </div>
+                </div>
+            `
         },
         modalDespesa: {
             title: '📄 Despesa',
@@ -267,45 +479,68 @@ function createModal(modalId) {
     modal.id = modalId;
     modal.className = 'modal hidden';
 
-    let fieldsHTML = '';
-    config.fields.forEach(field => {
-        if (field.type === 'select') {
-            const options = field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            fieldsHTML += `
-                <div class="form-group">
-                    <label class="form-label">${field.label}:</label>
-                    <select name="${field.name}" ${field.required ? 'required' : ''} class="form-control">
-                        <option value="">Selecione</option>
-                        ${options}
-                    </select>
-                </div>
-            `;
-        } else {
-            fieldsHTML += `
-                <div class="form-group">
-                    <label class="form-label">${field.label}:</label>
-                    <input type="${field.type}" name="${field.name}" ${field.required ? 'required' : ''} class="form-control" ${field.step ? `step="${field.step}"` : ''}>
-                </div>
-            `;
-        }
-    });
+    let contentHTML = '';
 
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>${config.title}</h3>
-                <button onclick="closeModal('${modalId}')" class="btn-close">✕</button>
+    if (config.customHTML) {
+        // Para modal de viagem com HTML customizado
+        contentHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${config.title}</h3>
+                    <button onclick="closeModal('${modalId}')" class="btn-close">✕</button>
+                </div>
+                <form onsubmit="saveItem(event, '${modalId}')">
+                    ${config.customHTML}
+                    <div class="modal-footer">
+                        <button type="button" onclick="closeModal('${modalId}')" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar Viagem</button>
+                    </div>
+                </form>
             </div>
-            <form onsubmit="saveItem(event, '${modalId}')">
-                ${fieldsHTML}
-                <div class="modal-footer">
-                    <button type="button" onclick="closeModal('${modalId}')" class="btn btn-secondary">Cancelar</button>
-                    <button type="submit" class="btn btn-primary">Salvar</button>
-                </div>
-            </form>
-        </div>
-    `;
+        `;
+    } else {
+        // Para outros modais com campos padrão
+        let fieldsHTML = '';
+        config.fields.forEach(field => {
+            if (field.type === 'select') {
+                const options = field.options.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+                fieldsHTML += `
+                    <div class="form-group">
+                        <label class="form-label">${field.label}:</label>
+                        <select name="${field.name}" ${field.required ? 'required' : ''} class="form-control">
+                            <option value="">Selecione</option>
+                            ${options}
+                        </select>
+                    </div>
+                `;
+            } else {
+                fieldsHTML += `
+                    <div class="form-group">
+                        <label class="form-label">${field.label}:</label>
+                        <input type="${field.type}" name="${field.name}" ${field.required ? 'required' : ''} class="form-control" ${field.step ? `step="${field.step}"` : ''}>
+                    </div>
+                `;
+            }
+        });
 
+        contentHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>${config.title}</h3>
+                    <button onclick="closeModal('${modalId}')" class="btn-close">✕</button>
+                </div>
+                <form onsubmit="saveItem(event, '${modalId}')">
+                    ${fieldsHTML}
+                    <div class="modal-footer">
+                        <button type="button" onclick="closeModal('${modalId}')" class="btn btn-secondary">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        `;
+    }
+
+    modal.innerHTML = contentHTML;
     document.body.appendChild(modal);
 }
 
@@ -322,6 +557,46 @@ function createOverlay() {
     return overlay;
 }
 
+// === CÁLCULOS DO MODAL DE VIAGEM ===
+function setupViagemCalculations() {
+    // Configurar eventos para cálculo automático
+    console.log('🧮 Configurando cálculos da viagem...');
+}
+
+function calcularFrete() {
+    const pesoSaida = parseFloat(document.querySelector('[name="pesoSaida"]')?.value) || 0;
+    const valorTonelada = parseFloat(document.querySelector('[name="valorTonelada"]')?.value) || 0;
+    const freteTotal = pesoSaida * valorTonelada;
+
+    const freteTotalInput = document.querySelector('[name="freteTotal"]');
+    if (freteTotalInput) {
+        freteTotalInput.value = freteTotal.toFixed(2);
+    }
+
+    calcularSaldo();
+}
+
+function calcularSaldo() {
+    const freteTotal = parseFloat(document.querySelector('[name="freteTotal"]')?.value) || 0;
+
+    // Somar todas as despesas
+    const valorPosto1 = parseFloat(document.querySelector('[name="valorPosto1"]')?.value) || 0;
+    const valorPosto2 = parseFloat(document.querySelector('[name="valorPosto2"]')?.value) || 0;
+    const valorPosto3 = parseFloat(document.querySelector('[name="valorPosto3"]')?.value) || 0;
+    const valorArla = parseFloat(document.querySelector('[name="valorArla"]')?.value) || 0;
+    const pedagioRetorno = parseFloat(document.querySelector('[name="pedagioRetorno"]')?.value) || 0;
+    const outrasDespesas = parseFloat(document.querySelector('[name="outrasDespesas"]')?.value) || 0;
+
+    const totalDespesas = valorPosto1 + valorPosto2 + valorPosto3 + valorArla + pedagioRetorno + outrasDespesas;
+    const saldoEnvelope = freteTotal - totalDespesas;
+
+    const saldoDisplay = document.getElementById('saldoEnvelope');
+    if (saldoDisplay) {
+        saldoDisplay.textContent = formatCurrency(saldoEnvelope);
+        saldoDisplay.className = `saldo-valor ${saldoEnvelope >= 0 ? 'positivo' : 'negativo'}`;
+    }
+}
+
 // === FUNÇÕES DE SALVAR ===
 function saveItem(event, modalId) {
     event.preventDefault();
@@ -333,45 +608,86 @@ function saveItem(event, modalId) {
     data.id = nextId++;
     data.status = 'ativo';
 
-    // Salvar conforme o tipo
-    const tipo = modalId.replace('modal', '').toLowerCase();
+    // Tratamento especial para modal de viagem
+    if (modalId === 'modalViagem') {
+        // Calcular valores
+        data.pesoSaida = parseFloat(data.pesoSaida);
+        data.pesoChegada = parseFloat(data.pesoChegada) || data.pesoSaida;
+        data.valorTonelada = parseFloat(data.valorTonelada);
+        data.freteTotal = data.pesoSaida * data.valorTonelada;
 
-    switch(tipo) {
-        case 'veiculo':
-            dadosLocais.veiculos.push(data);
-            loadVeiculos();
-            break;
-        case 'motorista':
-            dadosLocais.motoristas.push(data);
-            loadMotoristas();
-            break;
-        case 'viagem':
-            data.status = 'em_andamento';
-            dadosLocais.viagens.push(data);
-            loadViagens();
-            break;
-        case 'despesa':
-            data.status = 'pendente';
-            dadosLocais.despesas.push(data);
-            loadDespesas();
-            break;
-        case 'receita':
-            data.status = 'pendente';
-            dadosLocais.receitas.push(data);
-            loadReceitas();
-            break;
-        case 'banco':
-            dadosLocais.bancos.push(data);
-            loadBancos();
-            break;
-        case 'usuario':
-            dadosLocais.usuarios.push(data);
-            loadUsuarios();
-            break;
-        case 'perfil':
-            dadosLocais.perfis.push(data);
-            loadPerfis();
-            break;
+        // Abastecimentos
+        data.abastecimentos = [];
+        for (let i = 1; i <= 3; i++) {
+            const posto = data[`posto${i}`];
+            const km = data[`kmPosto${i}`];
+            const litros = data[`litrosPosto${i}`];
+            const valor = data[`valorPosto${i}`];
+
+            if (posto || litros || valor) {
+                data.abastecimentos.push({
+                    posto: posto || '',
+                    km: km || '',
+                    litros: parseFloat(litros) || 0,
+                    valor: parseFloat(valor) || 0
+                });
+            }
+        }
+
+        // ARLA
+        data.arla = {
+            km: data.kmArla || '',
+            litros: parseFloat(data.litrosArla) || 0,
+            valor: parseFloat(data.valorArla) || 0
+        };
+
+        // Cálculo do saldo
+        const totalDespesas = data.abastecimentos.reduce((sum, ab) => sum + ab.valor, 0) +
+                            data.arla.valor + 
+                            (parseFloat(data.pedagioRetorno) || 0) + 
+                            (parseFloat(data.outrasDespesas) || 0);
+
+        data.saldoEnvelope = data.freteTotal - totalDespesas;
+        data.status = 'andamento';
+
+        dadosLocais.viagens.push(data);
+        loadViagens();
+    } else {
+        // Salvar conforme o tipo
+        const tipo = modalId.replace('modal', '').toLowerCase();
+
+        switch(tipo) {
+            case 'veiculo':
+                dadosLocais.veiculos.push(data);
+                loadVeiculos();
+                break;
+            case 'motorista':
+                dadosLocais.motoristas.push(data);
+                loadMotoristas();
+                break;
+            case 'despesa':
+                data.status = 'pendente';
+                dadosLocais.despesas.push(data);
+                loadDespesas();
+                break;
+            case 'receita':
+                data.status = 'pendente';
+                dadosLocais.receitas.push(data);
+                loadReceitas();
+                break;
+            case 'banco':
+                dadosLocais.bancos.push(data);
+                loadBancos();
+                break;
+            case 'usuario':
+                dadosLocais.usuarios.push(data);
+                loadUsuarios();
+                break;
+            case 'perfil':
+                dadosLocais.perfis.push(data);
+                loadPerfis();
+                break;
+        }
     }
 
     closeModal(modalId);
@@ -472,8 +788,8 @@ async function loadViagens() {
 
     container.innerHTML = dadosLocais.viagens.map(v => `
         <div class="item-lista">
-            <strong>${formatDate(v.data)} - ${v.origem} → ${v.destino}</strong><br>
-            <small>Motorista: ${v.motorista} | Veículo: ${v.veiculo} | Frete: ${formatCurrency(v.frete || 0)}</small>
+            <strong>${formatDate(v.dataViagem)} - ${v.localCarga || v.origem} → ${v.localDescarga || v.destino}</strong><br>
+            <small>Motorista: ${v.motorista} | Veículo: ${v.veiculo} | Frete: ${formatCurrency(v.freteTotal || 0)} | Saldo: ${formatCurrency(v.saldoEnvelope || 0)}</small>
             <span class="status ${v.status === 'finalizada' ? 'status-success' : 'status-warning'}">${v.status}</span>
             <div class="item-actions">
                 <button class="btn btn-sm btn-outline" onclick="editItem('viagens', ${v.id})">✏️ Editar</button>
@@ -708,3 +1024,5 @@ window.editItem = editItem;
 window.deleteItem = deleteItem;
 window.pagarDespesa = pagarDespesa;
 window.receberReceita = receberReceita;
+window.calcularFrete = calcularFrete;
+window.calcularSaldo = calcularSaldo;
